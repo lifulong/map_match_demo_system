@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>真实轨迹</title>
+    <title>修正轨迹</title>
     <style type="text/css">
     body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
     </style>
@@ -33,15 +33,15 @@ function registerScript($script){
 if(isset($_GET['dir']))
 	$path=$_GET['dir'].'/';
 else
-	$path='/data/raw/';
+	$path=$_SERVER['DOCUMENT_ROOT'].'/data/map/';
 
 $result=getAllFiles($path);
 
 foreach($result as $file){
 	if(is_file($path.$file))
-        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/realtimetrack_newstrategy/?file='.$path.$file."'>".$file."</a>";
+        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/map_match_demo/index.php?file='.$path.$file."'>".$file."</a>";
 	else if(is_dir($path.$file))
-        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/realtimetrack_newstrategy/all.php?dir='.$path.$file."'>".$file."</a>";
+        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/map_match_demo/all.php?dir='.$path.$file."'>".$file."</a>";
 	echo $linkTag."<br/>";
 }
 ?>

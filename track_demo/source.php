@@ -1,25 +1,24 @@
 <?php
-class Source {
+class source {
 
 	const DEF_PI180 = 0.01745329252;
 	const DEF_R = 6370693.5;
-	public $arrAll=array();
 	public function __construct($filename){
-		$this->queue=new CQueue();
 		$content=file_get_contents($filename);
-		$arrAll=json_decode($content);
+		$this->positions=json_decode($content, True);
+		echo "<script type='text/javascript'>console.log('source:".count($this->positions)."')</script>";
 	}
 
-	public static function getDistance($loc1,$loc2){
+	public static function calDistance($loc1,$loc2){
 
 		if($loc1==null||$loc2==null||!self::isValidLocation($loc1)||!self::isValidLocation($loc2)){
 			return null;
 		}
-		return self::getLongDistance((double)$loc1->lng,(double)$loc1->lat,(double)$loc2->lng,(double)$loc2->lat);
+		return self::getLongDistance((double)$loc1['lng'],(double)$loc1['lat'],(double)$loc2['lng'],(double)$loc2['lat']);
 	}
 
 	public static function isValidLocation($loc){
-		return $loc!=null&&abs($loc->lat)<=90&&abs($loc->lat)>0&&abs($loc->lng)<=180&&abs($loc->lng)>0;
+		return $loc!=null&&abs($loc['lat'])<=90&&abs($loc['lat'])>0&&abs($loc['lng'])<=180&&abs($loc['lng'])>0;
 	}
 
 	public static function getLongDistance($lon1, $lat1, $lon2, $lat2) {
