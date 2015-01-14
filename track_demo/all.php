@@ -39,9 +39,9 @@ $result=getAllFiles($path);
 
 foreach($result as $file){
 	if(is_file($path.$file))
-        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/map_match_demo/index.php?file='.$path.$file."'>".$file."</a>";
+        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/track_demo/index.php?file='.$path.$file."'>".$file."</a>";
 	else if(is_dir($path.$file))
-        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/map_match_demo/all.php?dir='.$path.$file."'>".$file."</a>";
+        	$linkTag="&nbsp;&nbsp;&nbsp<a target='_blank' href='http://".$_SERVER['HTTP_HOST'].'/track_demo/all.php?dir='.$path.$file."'>".$file."</a>";
 	echo $linkTag."<br/>";
 }
 ?>

@@ -129,9 +129,9 @@ function registerScript($script){
 		echo "<script type='text/javascript'>console.log('before point check')</script>";
 
 		if($firstPoint != null)
-			registerScript('var firstIcon = new BMap.Icon("http://" + location.hostname + "/tools/guiji/start.png", new BMap.Size(33, 44), { offset: new BMap.Size(0, 0), imageOffset: new BMap.Size(0, 0)});  marker = new BMap.Marker('.json_encode($firstPoint).', {icon: firstIcon}); map.addOverlay(marker); ');
+			registerScript('var firstIcon = new BMap.Icon("./start.png", new BMap.Size(33, 44), { offset: new BMap.Size(0, 0), imageOffset: new BMap.Size(0, 0)});  marker = new BMap.Marker('.json_encode($firstPoint).', {icon: firstIcon}); map.addOverlay(marker); ');
 		if($lastPoint != null)
-			registerScript('var lastIcon = new BMap.Icon("http://" + location.hostname + "/tools/guiji/end.png", new BMap.Size(33, 44), { offset: new BMap.Size(0, 0), imageOffset: new BMap.Size(0, 0)});  marker = new BMap.Marker('.json_encode($lastPoint).', {icon: lastIcon}); map.addOverlay(marker); ');
+			registerScript('var lastIcon = new BMap.Icon("./end.png", new BMap.Size(33, 44), { offset: new BMap.Size(0, 0), imageOffset: new BMap.Size(0, 0)});  marker = new BMap.Marker('.json_encode($lastPoint).', {icon: lastIcon}); map.addOverlay(marker); ');
 		$strAllJsArray=implode(',',$arrAllPoints);
 		registerScript("showPoints(new Array($strAllJsArray),'red');");
 
