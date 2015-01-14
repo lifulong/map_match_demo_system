@@ -17,7 +17,7 @@ $data=new source($_GET['file']);
 </head>
 <body>
 	<h1>实时轨迹查询</h1>
-	红线和紫线是实时轨迹，绿线蓝线是所有定位点<br/>
+	红线是所有定位点<br/>
 	<div id="allmap"></div>
 </body>
 </html>
@@ -36,6 +36,7 @@ $data=new source($_GET['file']);
     var myIcon,marker;
     //map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
 	//endTime 格式 2014-10-11 20:00:00
+
 	function transDate(endTime){
 		var date=new Date();
 		date.setFullYear(endTime.substring(0,4));
@@ -46,39 +47,24 @@ $data=new source($_GET['file']);
 		date.setSeconds(endTime.substring(17,19));
 		return Date.parse(date)/1000;
 	}
+
 	function showPoints(arrPoints,color){
-		console.log("just test");
-		var arrRealPoints = new Array();
 		var len=arrPoints.length;
-		console.log("len="+len);
 		var label;
+
 		if(color=='red'){
-		    for(var i=1;i<len-1;++i){
-			label = new BMap.Label(i, {position:arrPoints[i],offset:new BMap.Size(0,0)}); 
-			map.addOverlay(label);
-			var pt = new BMap.Point(arrPoints[i].lng, arrPoints[i].lat);
-			var myIcon = new BMap.Icon("./16.png", new BMap.Size(16,16));
-			var marker2 = new BMap.Marker(pt,{icon:myIcon});  // 创建标注
-			map.addOverlay(marker2);  
+		    for(var i=0;i<len;++i) {
+				label = new BMap.Label(i, {position:arrPoints[i],offset:new BMap.Size(0,0)}); 
+				map.addOverlay(label);
+				var pt = new BMap.Point(arrPoints[i].lng, arrPoints[i].lat);
+				var myIcon = new BMap.Icon("./16.png", new BMap.Size(16,16));
+				var marker2 = new BMap.Marker(pt,{icon:myIcon});  // 创建标注
+				map.addOverlay(marker2);  
 		    }
 		}
-		var j=-1;
-		for(var i=0;i!=len;++i){
-			if(i>0&&j>=0){
-				if(false){
-					var polyline = 
-						new BMap.Polyline(arrRealPoints, 
-						{strokeColor:color, strokeWeight:3, strokeOpacity:0.5});
-					map.addOverlay(polyline);
-					arrRealPoints=new Array();
-					j=-1;
-				}
-			}
-			arrRealPoints.push(arrPoints[i]);
-			j=i;
-    	}
+
 		if(arrRealPoints.length>=2){
-			var polyline = new BMap.Polyline(arrRealPoints, 
+			var polyline = new BMap.Polyline(arrPoints, 
 				{strokeColor:color, strokeWeight:3, strokeOpacity:0.5});
 			map.addOverlay(polyline);
 		}
@@ -128,10 +114,6 @@ function registerScript($script){
 
 		echo "<script type='text/javascript'>console.log('before point check')</script>";
 
-		if($firstPoint != null)
-			registerScript('var firstIcon = new BMap.Icon("./start.png", new BMap.Size(33, 44), { offset: new BMap.Size(0, 0), imageOffset: new BMap.Size(0, 0)});  marker = new BMap.Marker('.json_encode($firstPoint).', {icon: firstIcon}); map.addOverlay(marker); ');
-		if($lastPoint != null)
-			registerScript('var lastIcon = new BMap.Icon("./end.png", new BMap.Size(33, 44), { offset: new BMap.Size(0, 0), imageOffset: new BMap.Size(0, 0)});  marker = new BMap.Marker('.json_encode($lastPoint).', {icon: lastIcon}); map.addOverlay(marker); ');
 		$strAllJsArray=implode(',',$arrAllPoints);
 		registerScript("showPoints(new Array($strAllJsArray),'red');");
 
