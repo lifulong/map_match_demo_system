@@ -5,7 +5,12 @@ class source {
 	const DEF_R = 6370693.5;
 	public function __construct($filename){
 		$content=file_get_contents($filename);
-		$this->positions=json_decode($content, True);
+		$splits=explode("\n", $content);
+		$roads = $splits[0];
+		$positions = empty($splits[1]) ? "" : $splits[1];
+		$this->roads=json_decode($roads, True);;
+		$this->positions=json_decode($positions, True);
+		echo "<script type='text/javascript'>console.log('source:".$positions."')</script>";
 		echo "<script type='text/javascript'>console.log('source:".count($this->positions)."')</script>";
 	}
 

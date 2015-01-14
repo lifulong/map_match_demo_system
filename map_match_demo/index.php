@@ -48,11 +48,12 @@ $data=new source($_GET['file']);
 		return Date.parse(date)/1000;
 	}
 
-	function showPoints(arrPoints,color){
+	function showRoads(arrPoints,color){
+
 		var len=arrPoints.length;
 		var label;
 
-		if(color=='red'){
+		if(color=='blue'){
 		    for(var i=0;i<len;++i) {
 				label = new BMap.Label(i, {position:arrPoints[i],offset:new BMap.Size(0,0)}); 
 				map.addOverlay(label);
@@ -63,10 +64,26 @@ $data=new source($_GET['file']);
 		    }
 		}
 
-		if(arrRealPoints.length>=2){
-			var polyline = new BMap.Polyline(arrPoints, 
-				{strokeColor:color, strokeWeight:3, strokeOpacity:0.5});
+		if(arrPoints.length>=2){
+			var polyline = new BMap.Polyline(arrPoints, {strokeColor:color, strokeWeight:3, strokeOpacity:0.5});
 			map.addOverlay(polyline);
+		}
+	}	
+
+	function showPoints(arrPoints,color){
+
+		var len=arrPoints.length;
+		var label;
+
+		if(color=='blue'){
+		    for(var i=0;i<len;++i) {
+				label = new BMap.Label(i, {position:arrPoints[i],offset:new BMap.Size(0,0)}); 
+				map.addOverlay(label);
+				var pt = new BMap.Point(arrPoints[i].lng, arrPoints[i].lat);
+				var myIcon = new BMap.Icon("./16.png", new BMap.Size(16,16));
+				var marker2 = new BMap.Marker(pt,{icon:myIcon});  // 创建标注
+				map.addOverlay(marker2);  
+		    }
 		}
 	}	
 
@@ -77,28 +94,33 @@ function registerScript($script){
 	echo "<script type='text/javascript'>$script</script>";
 }
 		$eps=1e-6;
+		$arrAllRoads=array();
 		$arrAllPoints=array();
 		$sum_lng=0.0;
 		$sum_lat=0.0;
 		$baidu_cnt=0;
-		$firstPoint=null;
-		$lastPoint=null;
 		echo "<script type='text/javascript'>console.log('test".count($data->positions)."')</script>";
-		foreach($data->positions as $point){
-			if($point['gps_type']=='baidu'){
-				if($point['lng']>$eps && $point['lat']>$eps){
-					++$baidu_cnt;
-					$sum_lng+=$point['lng'];
-					$sum_lat+=$point['lat'];
-					if($firstPoint===null){
-						$firstPoint=$point;
-					}
-					$lastPoint=$point;
-				}
+		foreach($data->roads as $point){
+			if($point['lng']>$eps && $point['lat']>$eps){
+				++$baidu_cnt;
+				$sum_lng+=$point['lng'];
+				$sum_lat+=$point['lat'];
 			}
+
+			$arrAllRoads[]=json_encode($point);
+		}
+
+		foreach($data->positions as $point){
+			if($point['lng']>$eps && $point['lat']>$eps){
+				++$baidu_cnt;
+				$sum_lng+=$point['lng'];
+				$sum_lat+=$point['lat'];
+			}
+
 			$arrAllPoints[]=json_encode($point);
 		}
 
+		/*
 		$ratio=array(50,100,200,500,1000,2000,5000,10000,20000,25000,50000,100000,200000,500000,1000000,2000000);
 		$distance=source::calDistance($firstPoint,$lastPoint);
 		$ratio_level=0;
@@ -108,14 +130,17 @@ function registerScript($script){
 			}
 		}
 		$level=18-$ratio_level;
-		if($baidu_cnt>0){
-			registerScript("map.centerAndZoom(new BMap.Point($sum_lng/$baidu_cnt,$sum_lat/$baidu_cnt),$level);");
-		}
+		*/
+		$level=18;
+
+		registerScript("map.centerAndZoom(new BMap.Point($sum_lng/$baidu_cnt,$sum_lat/$baidu_cnt),$level);");
 
 		echo "<script type='text/javascript'>console.log('before point check')</script>";
 
-		$strAllJsArray=implode(',',$arrAllPoints);
-		registerScript("showPoints(new Array($strAllJsArray),'red');");
+		$roadAllJsArray=implode(',',$arrAllRoads);
+		$pointAllJsArray=implode(',',$arrAllPoints);
+		registerScript("showRoads(new Array($roadAllJsArray),'blue');");
+		registerScript("showPoints(new Array($pointAllJsArray),'blue');");
 
 ?>
 
