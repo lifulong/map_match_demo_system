@@ -15,6 +15,15 @@ echo "<br>";
 
 $navigator = array();
 
+
+$navi_road = array(
+		'name' => 'navi_road',
+		'url' => 'road_demo',
+		'display' => 'road network demo system',
+		'desc' => 'null',
+		);
+$navigator[] = $navi_road;
+
 $navi_online = array(
 		'name' => 'navi_track',
 		'url' => 'track_demo',
